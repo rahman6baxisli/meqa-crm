@@ -21,21 +21,22 @@ import java.util.stream.Collectors;
 @RequestMapping("/v1/export/")
 @Controller
 public class ClaimExcelGeneraterController {
-   private final ClaimService claimService;
+    private final ClaimService claimService;
 
-   @GetMapping("/forma/1")
-   public void exportData(HttpServletResponse response) throws IOException {
-       Map<String, Object> dataList = fetchData(); // Method to fetch your dynamic data
+    @GetMapping("/forma/1")
+    public void exportData(HttpServletResponse response) throws IOException {
+        Map<String, Object> dataList = fetchData(); // Method to fetch your dynamic data
 
-       // Add any dynamic template data if needed
-       response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-       response.setHeader("Content-Disposition", "attachment; filename=\"forma_1.xlsx\"");
-       OutputStream outputStream = response.getOutputStream();
-       try (InputStream templateStream = new ClassPathResource("excel/forma1.xlsx").getInputStream()) {
-           claimService.exportData(dataList, templateStream, outputStream);
-       }
-       outputStream.close();
-   }
+        // Add any dynamic template data if needed
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=\"forma_1.xlsx\"");
+        OutputStream outputStream = response.getOutputStream();
+        try (InputStream templateStream = new ClassPathResource("excel/forma1.xlsx").getInputStream()) {
+            claimService.exportData(dataList, templateStream, outputStream);
+        }
+        outputStream.close();
+    }
+
     private Map<String, Object> fetchData() {
         List<Object> filterDTOList = Collections.emptyList();
         List<Claim> claims = claimService.getAllClaims(filterDTOList);
@@ -48,9 +49,10 @@ public class ClaimExcelGeneraterController {
         dynamicData.put("tekrarSigortaClaims", tekrarSigortaClaims);
         return dynamicData;
     }
+
     @PostMapping("/claims/list")
     public ResponseEntity<Object> index(@RequestBody List<Object> filterDTOList) throws IOException {
         Object claimList = claimService.getAllClaims(filterDTOList);
-        return  ResponseEntity.ok(claimList);
+        return ResponseEntity.ok(claimList);
     }
 }

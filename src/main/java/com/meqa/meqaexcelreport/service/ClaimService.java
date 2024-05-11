@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.jxls.common.Context;
+
 import java.util.Map.Entry;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ClaimService {
     @Autowired
-    private  final ClaimRepository claimRepository;
+    private final ClaimRepository claimRepository;
 
     public Object generateClaimExcelForFirst() {
         Map<String, String> claims = new HashMap<>();
@@ -31,17 +32,18 @@ public class ClaimService {
         return claims;
     }
 
-    public List<Claim> getAllClaims(List<Object> filterDTOList){
+    public List<Claim> getAllClaims(List<Object> filterDTOList) {
         return claimRepository.findAll();
     }
 
     public void exportData(Map<String, Object> dataList, InputStream templateStream, OutputStream outputStream) throws IOException {
-        try(InputStream is = templateStream; OutputStream os = outputStream) {
+        try (InputStream is = templateStream; OutputStream os = outputStream) {
             Context context = new Context();
             for (Entry<String, Object> element : dataList.entrySet()) { // 2
                 context.putVar(element.getKey(), element.getValue());
             }
-            JxlsHelper.getInstance().processTemplate(is, os, context);
+                var a = JxlsHelper.getInstance().processTemplate(is, os, context);
+            System.out.println(a);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
